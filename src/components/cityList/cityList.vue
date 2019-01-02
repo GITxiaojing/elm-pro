@@ -22,21 +22,21 @@
 </template>
 
 <script>
-  export default {
-    name: 'city-list',
-    props: {
-      data: {
-        type: Array
-      }
-    },
-    data() {
-      return {}
-    },
-    computed: {},
-    mounted () {
-    },
-    methods: {}
-  }
+export default {
+  name: 'city-list',
+  props: {
+    data: {
+      type: Array
+    }
+  },
+  data () {
+    return {}
+  },
+  computed: {},
+  mounted () {
+  },
+  methods: {}
+}
 </script>
 
 <style scoped>
@@ -47,7 +47,7 @@
     width: 100%;
     top: 1.95rem;
   }
-  
+
   .city-wrap::-webkit-scrollbar {
     width: 0;
     height: 0;
