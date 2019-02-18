@@ -1,5 +1,6 @@
 <template>
-  <div class="city-wrap">
+  <div class="city-page">
+    <div class="fixed-city title-box" v-show="isFixed">{{fixedCity}}</div>
     <div class="city-nav">
       <div class="nav-tip">
         <span>当前定位城市：</span>
@@ -10,47 +11,71 @@
         <span class="fa fa-angle-right"></span>
       </div>
     </div>
-    <div v-for="(item, idx) in data" :key="idx" class="city-ul">
-      <h4 class="title-box" :data-id="item.id">
-        {{item.name}}
-      </h4>
-      <ul :class="{'city-box': true, 'hot': item.isHot}">
-        <li v-for="(city, idx1) in item.cityList" class="city-grid" :data-id="city.id" :key="idx1">{{city.value}}</li>
-      </ul>
+    <div class="city-wrap"
+         ref="cityWrap"
+    >
+      <div class="city-body">
+        <div v-for="(item, idx) in data" :key="idx" class="city-ul">
+          <h4 class="title-box" :data-id="item.id">
+            {{item.name}}
+          </h4>
+          <ul :class="{'city-box': true, 'hot-city': item.isHot}">
+            <li v-for="(city, idx1) in item.cityList" class="city-grid" :data-id="city.id" :key="idx1">{{city.value}}</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'city-list',
-    props: {
-      data: {
-        type: Array
-      }
-    },
-    data() {
-      return {}
-    },
-    computed: {},
-    mounted () {
-    },
-    methods: {}
+
+import Scroll from '../scroll/scroll'
+export default {
+  name: 'city-list',
+  props: {
+    data: {
+      type: Array
+    }
+  },
+  data () {
+    return {
+      fixedCity: '热门城市',
+      isFixed: false,
+      scroll: null
+    }
+  },
+  computed: {},
+  mounted () {
+    this.initScroll()
+  },
+  methods: {
+    initScroll () {
+      this.scroll = new Scroll(this.$refs.cityWrap, {
+        bounce: false
+      })
+    }
   }
+}
 </script>
 
 <style scoped>
-  @import 'font-awesome/css/font-awesome.css';
+  @import '../../../node_modules/font-awesome/css/font-awesome.css';
 
-  .city-wrap {
+  .city-page {
     position: absolute;
     width: 100%;
     top: 1.95rem;
+    overflow: hidden;
+    height: calc(100% - 1.95rem);
   }
-  
-  .city-wrap::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+
+  .fixed-city {
+    position: fixed;
+    top: 6.15rem;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
   }
 
   .city-nav {
@@ -91,6 +116,16 @@
 
   .loc-div .loc-city {
     color: #3190e8;
+  }
+
+  .city-wrap {
+    width: 100%;
+    height: calc(100% - 4.2rem);
+    overflow: hidden;
+  }
+
+  .city-body {
+    width: 100%;
   }
 
   .city-ul {
