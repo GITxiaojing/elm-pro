@@ -76,6 +76,7 @@ export default {
     left: 0;
     z-index: 1;
     background-color: #fff;
+  }
 
   .city-wrap::-webkit-scrollbar {
     width: 0;
