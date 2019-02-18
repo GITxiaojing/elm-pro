@@ -1,4 +1,4 @@
-# music-project
+# ele-pro
 
 > A Vue.js project
 

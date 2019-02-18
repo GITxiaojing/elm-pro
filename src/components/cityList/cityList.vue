@@ -76,6 +76,10 @@ export default {
     left: 0;
     z-index: 1;
     background-color: #fff;
+
+  .city-wrap::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 
   .city-nav {
