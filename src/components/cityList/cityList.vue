@@ -6,7 +6,7 @@
         <span>当前定位城市：</span>
         <span>定位不准时，请在城市列表中选择</span>
       </div>
-      <div class="loc-div">
+      <div class="loc-div" @click="toCityChangePage">
         <span class="loc-city">广州</span>
         <span class="fa fa-angle-right"></span>
       </div>
@@ -20,7 +20,7 @@
             {{item.name}}
           </h4>
           <ul :class="{'city-box': true, 'hot-city': item.isHot}">
-            <li v-for="(city, idx1) in item.cityList" class="city-grid" :data-id="city.id" :key="idx1">{{city.value}}</li>
+            <li v-for="(city, idx1) in item.cityList" class="city-grid" :data-id="city.id" :key="idx1" @click="toCityChangePage">{{city.value}}</li>
           </ul>
         </div>
       </div>
@@ -54,13 +54,16 @@ export default {
       this.scroll = new Scroll(this.$refs.cityWrap, {
         bounce: false
       })
+    },
+    toCityChangePage () {
+      this.$router.push('/addrSearch')
     }
   }
 }
 </script>
 
 <style scoped>
-  @import '../../../node_modules/font-awesome/css/font-awesome.css';
+  @import "../../style/common.less";
 
   .city-page {
     position: absolute;

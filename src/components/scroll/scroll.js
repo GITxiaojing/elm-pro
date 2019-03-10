@@ -24,7 +24,11 @@ function Scroll(el, options) {
     this.options[i] = options[i];
   }
 
+  this.canScroll = false;
+
   this.init();
+
+  this.timer = true;
 }
 
 Scroll.prototype = {
@@ -90,6 +94,9 @@ Scroll.prototype = {
   _start: function (e) {
     this.options.wrapperHeight = this.getWrapperHeight();
     this.options.scrollerHeight = this.scroller.scrollHeight;
+    this.canScroll = this.options.wrapperHeight < this.options.scrollerHeight;
+    this.moved = false;
+
     // 获取目前内容上移的距离
     // this.curY = this.scrollStyle.transform ? parseInt(this.scrollStyle.transform.split(',')[1].replace('px', '')) : 0;
     this.curY = this.getTransform();
@@ -112,19 +119,21 @@ Scroll.prototype = {
     /* if (e.timeStamp - this.lastMoveTime > 300 && (Math.abs(this.pointX) < 10 && Math.abs(this.pointY))) {
        return;
      }*/
-    if (Math.abs(this.pointX) < 10 && Math.abs(this.pointY) < 10) {
+    if (!this.canScroll || (Math.abs(this.pointX) < 10 && Math.abs(this.pointY) < 10)) {
       return;
     }
+
     // var newX = this.curX + this.disX;
     var newY = this.curY + this.disY;
 
     // 当滚动距离要超过边界时，缓慢滚动
     if (newY > 0 || newY < this.options.wrapperHeight - this.options.scrollerHeight) {
-      newY = this.options.bounce ? this.curY + this.disY / 4 : newY > 0 ? 0 : (this.options.wrapperHeight - this.options.scrollerHeight);
+      newY = this.options.bounce ? this.curY + this.disY / 4 : (newY > 0 ? 0 : (this.options.wrapperHeight - this.options.scrollerHeight));
     }
     // if (newX > 0 || newX < this.wrapper.offsetWidth - this.scroller.scrollWidth) {
     //   newX = this.options.bounce ? this.curX + this.disX / 3 : newX > 0 ? 0 : (this.wrapper.offsetWidth - this.scroller.scrollWidth);
     // }
+    this.moved = true;
     this.scrollTo(newY);
     // if (!this.options.bounce) {
     //   this.isBounds();
@@ -134,7 +143,7 @@ Scroll.prototype = {
   },
   _end: function (e) {
     // clearInterval(this.timer);
-    if (e.changedTouches.length < 0) return;
+    if (e.changedTouches.length < 0 || !this.canScroll || !this.moved) return;
     this.disY = e.changedTouches[0].pageY - this.startY;
     // this.disX = e.changedTouches[0].pageX - this.startX;
     this.curY += this.disY;
@@ -142,24 +151,28 @@ Scroll.prototype = {
     var speed = (this.disY / (e.timeStamp - this.startTime)) * 16,
       self = this,
       f = 0,
-      timer = true,
       distance = 0;
-    if (e.timeStamp - this.startTime > 300) timer = false;
-    if (this.options.momentum && timer) {
+    this.timer = true;
+    if (e.timeStamp - this.startTime > 300) this.timer = false;
+    if (this.options.momentum && this.timer) {
       momentumFunc();
-    } else if ((!this.options.momentum || !timer) && (this.curY >= 0 || this.curY <= self.options.wrapperHeight - self.options.scrollerHeight)) {
+    } else if ((!this.options.momentum || !this.timer) && (this.curY >= 0 || this.curY <= this.options.wrapperHeight - this.options.scrollerHeight)) {
       this.ease();
     }
 
     function momentumFunc() { // 惯性滚动
-      timer && requestAnimationFrame(momentumFunc)
+      if (self.timer) {
+        requestAnimationFrame(momentumFunc)
+      } else {
+        return;
+      }
       f = Math.min(Math.abs(speed) / 32, 0.5)
       if (speed > 0.2) {
         speed -= f;
       } else if (speed < -0.2) {
         speed += f;
       } else {
-        timer = false;
+        self.timer = false;
         speed = 0;
         if (self.curY >= 0 || self.curY <= self.options.wrapperHeight - self.options.scrollerHeight) {
           self.ease();
@@ -169,7 +182,7 @@ Scroll.prototype = {
       if (!self.options.bounce && (self.curY + speed >= 0 || self.curY + speed <= self.options.wrapperHeight - self.options.scrollerHeight)) {
         self.curY += speed
         self.ease()
-        timer = false;
+        self.timer = false;
         speed = 0;
         return;
       }
@@ -180,7 +193,7 @@ Scroll.prototype = {
           self.curY = self.curY + speed / 3;
         } else {
           self.ease();
-          timer = false;
+          self.timer = false;
           speed = 0;
           return;
         }
@@ -190,9 +203,15 @@ Scroll.prototype = {
       self.scrollTo(self.curY);
     }
   },
+
+  stopMomentum () { // 停止惯性滚动
+    this.timer = false;
+  },
+
   ease() {
     this.curY = this.curY >= 0 ? 0 : (this.options.wrapperHeight - this.options.scrollerHeight);
-    this.scroller.style = `transform: translate3d(0px , ${this.curY}px, 0px); transition: all 0.4s cubic-bezier(0.15,0.68,0,0.88) 0s`;
+    this.scroller.style.transform = `translate3d(0px , ${this.curY}px, 0px)`;
+    this.scroller.style.transition = 'all 0.4s cubic-bezier(0.15,0.68,0,0.88) 0s';
   },
   isBounds() {
     if (this.curY + this.disY > 0) {
@@ -207,7 +226,13 @@ Scroll.prototype = {
   },
   scrollTo(y) {
     this.options.curY = y;
-    this.scroller.style = `transform: translate3d(0px , ${y}px, 0px); transition: all 0s`;
+    this.scroller.style.transform = `translate3d(0px , ${y}px, 0px)`;
+    this.scroller.style.transition = `all 0s`;
+  },
+  translate (y) { // 带缓动效果
+    this.options.curY = y;
+    this.scroller.style.transform = `translate3d(0px , ${y}px, 0px)`;
+    this.scroller.style.transition = `all 0.4s cubic-bezier(0.15,0.68,0,0.88) 0s`;
   }
 }
 

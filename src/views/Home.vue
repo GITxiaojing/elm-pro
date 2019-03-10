@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <Header></Header>
-    <!--<Spin></Spin>-->
     <List :data="cityList"></List>
   </div>
 </template>
