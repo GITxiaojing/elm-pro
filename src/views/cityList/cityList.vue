@@ -20,7 +20,9 @@
             {{item.name}}
           </h4>
           <ul :class="{'city-box': true, 'hot-city': item.isHot}">
-            <li v-for="(city, idx1) in item.cityList" class="city-grid" :data-id="city.id" :key="idx1" @click="toCityChangePage">{{city.value}}</li>
+            <li v-for="(city, idx1) in item.cityList" class="city-grid" :data-id="city.id" :key="idx1"
+                @click="toCityChangePage">{{city.value}}
+            </li>
           </ul>
         </div>
       </div>
@@ -30,7 +32,8 @@
 
 <script>
 
-import Scroll from '../scroll/scroll'
+import Scroll from '@/components/scroll/scroll'
+
 export default {
   name: 'city-list',
   props: {
@@ -55,8 +58,11 @@ export default {
         bounce: false
       })
     },
-    toCityChangePage () {
+    toCityChangePage (e) {
+      console.log(e)
       this.$router.push('/addrSearch')
+      this.$store.commit('UPDATE_CurCity', e.target.innerText)
+      this.$store.commit('UPDATE_HeaderStatus', 'addrSearch')
     }
   }
 }

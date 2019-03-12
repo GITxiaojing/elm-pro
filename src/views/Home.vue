@@ -8,7 +8,7 @@
 <script>
 import Spin from '@/components/spin/spin.vue'
 import Header from '@/components/header/header'
-import List from '@/components/cityList/cityList'
+import List from './cityList/cityList'
 
 export default {
   name: 'home',

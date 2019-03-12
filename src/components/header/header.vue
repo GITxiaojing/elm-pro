@@ -1,15 +1,15 @@
 <template>
   <div class="header-wrap">
-    <div class="page-head" v-if="firstPage">
+    <div class="page-head" v-if="headState">
       <span class="head-logo">ele.me</span>
       <a class="head-text">
         <span>登录|注册</span>
       </a>
     </div>
     <div v-else class="page-head">
-      <span v-if="goBack" class="fa fa-angle-left head-logo goBack-logo"></span>
+      <span v-if="!state.back" class="fa fa-angle-left head-logo goBack-logo" @click="goBackFunc"></span>
       <span class="title-head">{{locName}}</span>
-      <a class="right-title">{{rightTitle}}</a>
+      <a class="right-title" @click="changeCity">{{rightTitle}}</a>
     </div>
   </div>
 </template>
@@ -19,20 +19,43 @@ export default {
   name: 'ihead',
   data () {
     return {
+      state: {
+        home: true,
+        back: false
+      }
     }
   },
   computed: {
-    firstPage () {
-      return true
-    },
-    goBack () {
-      return true
+    headState () {
+      return this.$store.state.headerStatus === 'home'
     },
     locName () {
-      return '广州'
+      return this.$store.state.curCity
     },
     rightTitle () {
       return '切换城市'
+    }
+  },
+  watch: {
+    headState (curVal) {
+      if (curVal === 'home') {
+        this.state.home = true
+        this.state.back = false
+      } else if (curVal === 'addrSearch') {
+        this.state.home = false
+        this.state.back = true
+      }
+    }
+  },
+  methods: {
+    goBackFunc () {
+      this.$router.go(-1)
+    },
+    changeCity () {
+      if (this.$router.history.current.fullPath === '/addrSearch') {
+        this.$router.push('/home')
+        this.$store.commit('UPDATE_HeaderStatus', 'home')
+      }
     }
   }
 }
@@ -84,6 +107,10 @@ export default {
     font-size: .8rem;
     font-weight: 700;
     margin: 0 auto;
+    width: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .right-title {
