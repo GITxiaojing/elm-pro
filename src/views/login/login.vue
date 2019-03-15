@@ -1,0 +1,168 @@
+<template>
+  <div class="login-container">
+    <Header :is-back="true" head-title="密码登录"></Header>
+    <form class="login-form">
+      <section class="input-div">
+        <input class="input" type="text" placeholder="账号"/>
+      </section>
+      <section class="input-div">
+        <input class="input" :type="visible ? 'text' : 'password'" placeholder="密码"/>
+        <div :class="{'btn-switch': true, 'switch-right': visible}" @click="switchVisible">
+          <div :class="{'btn-circle': true, 'btn-right': visible}"></div>
+          <span class="switch-text left-text" slot="on" v-if="visible">On</span>
+          <span class="switch-text" slot="off" v-else>Off</span>
+        </div>
+      </section>
+      <section class="input-div">
+        <input class="input" maxlength="4" type="text" placeholder="验证码"/>
+        <div class="valid-img">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAeCAMAAACMnWmDAAAAGFBMVEUAAABQUFAAAAAAAAAAAAAAAAAAAAAAAABiRp8mAAAACHRSTlMA/wAAAAAAACXRGJEAAAmJSURBVHjaAX4JgfYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQAAAAAAAAAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAQEBAAEBAQEAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAQEBAAEBAQEAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAQEBAAEBAQEAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAABAQEAAAEBAQEAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAABAQEAAAEBAQEAAAAAAAABAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAABAQEAAAEBAQEAAAAAAAABAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAEBAQAAAAEBAQEAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABXPAGEBJWD2AAAAABJRU5ErkJggg==">
+          <div class="change-img"><span>看不清</span><span>换一张</span></div>
+        </div>
+      </section>
+    </form>
+    <p class="login-tips">温馨提示：未注册过的账号，登录时将自动注册</p>
+    <p class="login-tips">注册过的用户可凭账号密码登录</p>
+    <input type="submit" class="success" value="登录">
+    <a class="primary-link" @click="toForget">重置密码？</a>
+  </div>
+</template>
+
+<script>
+
+import Header from '../../components/header/header'
+
+export default {
+  name: 'login',
+  data () {
+    return {
+      visible: false
+    }
+  },
+  components: { Header },
+  methods: {
+    switchVisible () {
+      this.visible = !this.visible
+    },
+    toForget () {
+      this.$router.push('/forget')
+    }
+  }
+}
+</script>
+
+<style scoped>
+  .login-container {
+    width: 100%;
+    padding: 2.35rem 0 0;
+  }
+
+  .login-form {
+    width: 100%;
+    background: #fff;
+  }
+
+  .input-div {
+    width: 100%;
+    padding: .6rem .8rem;
+    border-bottom: 1px solid #f1f1f1;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .input {
+    font-size: .7rem;
+    color: #666;
+    outline: none;
+    border: none;
+  }
+
+  .btn-switch {
+    background: #ccc;
+    width: 2rem;
+    height: .7rem;
+    border-radius: .5rem;
+    border: 1px;
+    padding: 0 .2rem;
+    position: relative;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .btn-circle {
+    position: absolute;
+    top: -.25rem;
+    left: -.3rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: #f1f1f1;
+  }
+
+  .switch-right {
+    background: #4cd964;
+    border: 1px solid #4cd964;
+  }
+
+  .btn-right {
+    transform: translateX(1.3rem);
+  }
+
+  .switch-text {
+    display: block;
+    font-size: .45rem;
+    line-height: .7rem;
+    color: #fff;
+    text-align: right;
+  }
+
+  .left-text {
+    text-align: left;
+  }
+
+  .valid-img {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .change-img {
+    font-size: .55rem;
+    width: 2rem;
+    color: #666;
+  }
+
+  .change-img span:last-child {
+    color: #3b95e9;
+    margin-top: .2rem;
+  }
+
+  .login-tips {
+    color: #ff0000;
+    font-size: .5rem;
+    line-height: .5rem;
+    padding: .4rem .6rem;
+    text-align: left;
+  }
+
+  .success {
+    margin: 0 auto 1rem;
+    width: 92%;
+    background: #4cd964;
+    color: #fff;
+    text-align: center;
+    border: 1px;
+    height: 1.5rem;
+    border-radius: .15rem;
+    font-size: .7rem;
+  }
+
+  .primary-link {
+    color: #3b95e9;
+    font-size: .6rem;
+    float: right;
+    margin-right: .3rem;
+  }
+</style>

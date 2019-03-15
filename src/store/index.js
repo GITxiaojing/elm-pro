@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const state = {
   headerStatus: 'home',
   locCity: '',
-  curCity: ''
+  curCity: '广州'
 }
 
 const mutations = {

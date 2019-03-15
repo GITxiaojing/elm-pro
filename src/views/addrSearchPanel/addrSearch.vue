@@ -1,6 +1,8 @@
 <template>
   <div class="addr-box">
-    <Header></Header>
+    <Header :head-title="cityName" :is-back="true">
+      <span slot="changeCity" class="change-style" @click="toChangeCity">切换城市</span>
+    </Header>
     <form class="input-form">
       <input class="addr-input" required="required" v-model="addr" type="search" placeholder="输入学校、商务楼、地址"/>
       <input type="submit" class="primary-btn large-btn" value="提交"/>
@@ -8,7 +10,7 @@
     <header class="head-title" v-if="!hasResult">搜索历史</header>
     <!--搜索结果或者历史记录-->
     <ul class="pois-ul">
-      <li class="poi-li" v-for="(item, index) in resultList" :key="index">
+      <li class="poi-li" v-for="(item, index) in resultList" :key="index" @click="toAddrDetail">
         <p class="poi-name">{{item.name}}</p>
         <p class="poi-address">{{item.address}}</p>
       </li>
@@ -27,12 +29,18 @@ export default {
     return {
       addr: '',
       resultList: [
-        // {
-        //   name: '广州站',
-        //   address: '广东省广州市越秀区环市西路159号'
-        // }
+        {
+          name: '广州站',
+          address: '广东省广州市越秀区环市西路159号'
+        }
       ],
       hasResult: false
+    }
+  },
+  computed: {
+    cityName () {
+      // return window.localStorage.getItem('curCity') ? window.localStorage.getItem('curCity') : this.$store.state.curCity
+      return this.$store.state.curCity
     }
   },
   beforeRouteLeave (to, from, next) {
@@ -42,8 +50,14 @@ export default {
     next()
   },
   methods: {
+    toChangeCity () {
+      this.$router.push('/home')
+    },
+    toAddrDetail (e) {
+      this.$router.push('/shopHome')
+    },
     clearHistory () {
-
+      this.resultList = []
     }
   }
 }
@@ -55,6 +69,14 @@ export default {
     width: 100%;
     padding: 2.35rem 0 0;
     -moz-box-sizing: border-box;
+  }
+
+  .change-style {
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.6rem;
   }
 
   .input-form {
